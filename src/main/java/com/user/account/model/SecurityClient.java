@@ -12,9 +12,13 @@ public class SecurityClient implements UserDetails {
 
     private Client client;
 
+    public SecurityClient(Client client){
+        this.client = client;
+    }
+
     @Override
     public Collection<? extends GrantedAuthority> getAuthorities() {
-        return Arrays.stream(client.getAuthority().split(",")).map(s -> new SimpleGrantedAuthority(s)).toList();
+        return Arrays.stream(client.getAuthority().split(",")).map(SimpleGrantedAuthority::new).toList();
     }
 
     @Override
@@ -29,21 +33,21 @@ public class SecurityClient implements UserDetails {
 
     @Override
     public boolean isAccountNonExpired() {
-        return false;
+        return true;
     }
 
     @Override
     public boolean isAccountNonLocked() {
-        return false;
+        return true;
     }
 
     @Override
     public boolean isCredentialsNonExpired() {
-        return false;
+        return true;
     }
 
     @Override
     public boolean isEnabled() {
-        return false;
+        return true;
     }
 }
