@@ -1,11 +1,13 @@
 package com.user.account.config;
 
+import com.user.account.filters.CustomCSRFFilter;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.web.SecurityFilterChain;
+import org.springframework.security.web.csrf.CsrfFilter;
 import org.springframework.web.cors.CorsConfiguration;
 import org.springframework.web.cors.CorsConfigurationSource;
 
@@ -18,6 +20,10 @@ public class SecurityConfig {
     String jwksUri;
     @Bean
     public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception{
+
+        http.httpBasic();
+        http.addFilterAfter(new CustomCSRFFilter(), CsrfFilter.class);
+
         http.cors(c->{
             CorsConfigurationSource source = s ->{
                 CorsConfiguration cc = new CorsConfiguration();
@@ -37,8 +43,10 @@ public class SecurityConfig {
 
         );
         http.authorizeHttpRequests((a) -> {
+            //a.requestMatchers("/account/create").permitAll();
             a.anyRequest().authenticated();
         });
+        //http.csrf(a -> a.ignoringRequestMatchers("/account/create"));
         return http.build();
 
     }
