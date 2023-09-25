@@ -44,10 +44,8 @@ public class SecurityConfig {
 
         );
         http.authorizeHttpRequests((a) -> {
-            //a.requestMatchers("/account/create").permitAll();
             a.anyRequest().authenticated();
         });
-        //http.csrf(a -> a.ignoringRequestMatchers("/account/create"));
         return http.build();
 
     }
