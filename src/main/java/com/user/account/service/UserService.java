@@ -13,4 +13,8 @@ public class UserService {
     public String createUser(UserDTO user){
         return userRepository.save(new User(user)).toString();
     }
+
+    public double getbalance(String email){
+        return userRepository.findByEmail(email).get().getBalance();
+    }
 }
