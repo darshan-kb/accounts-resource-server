@@ -21,7 +21,6 @@ public class AccountController {
 
     @GetMapping("account/balance/{email}")
     public ResponseEntity<Double> getbalance(@PathVariable String email, Principal principal){
-        System.out.println(principal);
         return ResponseEntity.ok(userService.getbalance(email));
     }
 }
