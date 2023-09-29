@@ -1,4 +1,4 @@
-package com.user.account.dto;
+package com.user.account.model;
 
 import lombok.AllArgsConstructor;
 import lombok.Getter;
@@ -9,8 +9,7 @@ import lombok.Setter;
 @Setter
 @AllArgsConstructor
 @NoArgsConstructor
-public class UserDTO {
-    private String username;
-    private String email;
-    private String role;
+public class ApiResponse {
+    private String attribute;
+    private String value;
 }

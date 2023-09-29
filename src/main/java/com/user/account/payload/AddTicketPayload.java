@@ -1,4 +1,4 @@
-package com.user.account.dto;
+package com.user.account.payload;
 
 import lombok.AllArgsConstructor;
 import lombok.Getter;
@@ -9,8 +9,7 @@ import lombok.Setter;
 @Setter
 @AllArgsConstructor
 @NoArgsConstructor
-public class UserDTO {
-    private String username;
+public class AddTicketPayload {
+    private double amount;
     private String email;
-    private String role;
 }
