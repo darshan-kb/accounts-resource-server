@@ -14,6 +14,9 @@ public class TicketService {
 
     @Transactional
     public double addTicket(String email, double amount){
+        if(amount<0){
+            throw new IllegalStateException("Amount is not valid");
+        }
         User user = userRepository.findByEmail(email).orElseThrow(() -> new UsernameNotFoundException("User not found"));
         double balance = user.getBalance();
         if(balance > amount){
@@ -25,5 +28,16 @@ public class TicketService {
         }
 
         return balance-amount;
+    }
+
+    public double errorTicket(String email, double amount) {
+        if(amount<0){
+            throw new IllegalStateException("Amount is not valid");
+        }
+        User user = userRepository.findByEmail(email).orElseThrow(() -> new UsernameNotFoundException("User not found"));
+        double balance = user.getBalance();
+        user.setBalance(balance+amount);
+        userRepository.save(user);
+        return balance+amount;
     }
 }

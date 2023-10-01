@@ -20,4 +20,10 @@ public class TicketController {
         double balance = ticketService.addTicket(addTicketPayload.getEmail(), addTicketPayload.getAmount());
         return new ResponseEntity<Double>(balance,HttpStatus.OK);
     }
+
+    @PostMapping("/ticket/error")
+    public ResponseEntity<Double> errorticket(@RequestBody AddTicketPayload addTicketPayload){
+        double balance = ticketService.errorTicket(addTicketPayload.getEmail(), addTicketPayload.getAmount());
+        return new ResponseEntity<Double>(balance,HttpStatus.OK);
+    }
 }
