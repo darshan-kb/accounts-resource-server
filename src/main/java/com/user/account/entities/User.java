@@ -1,14 +1,13 @@
 package com.user.account.entities;
 
 import com.user.account.dto.UserDTO;
-import jakarta.persistence.Entity;
-import jakarta.persistence.GeneratedValue;
-import jakarta.persistence.GenerationType;
-import jakarta.persistence.Id;
+import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 import lombok.ToString;
+
+import java.util.List;
 
 @Getter
 @Setter
@@ -23,6 +22,8 @@ public class User {
     private String email;
     private String role;
     private double balance;
+    @OneToMany(mappedBy = "user", cascade = CascadeType.REMOVE)
+    private List<AccountTransaction> accountTransaction;
 
     public User(String username, String email, String role){
         this.username=username;

@@ -15,6 +15,6 @@ public class ClaimController {
     private ClaimService claimService;
     @PostMapping("/claims")
     public ResponseEntity<Double> claim(@RequestBody TransactionPayload transactionPayload){
-        return new ResponseEntity<Double>(claimService.redeemClaim(transactionPayload.getEmail(), transactionPayload.getClaimAmount()), HttpStatus.OK);
+        return new ResponseEntity<Double>(claimService.redeemClaim(transactionPayload.getEmail(), transactionPayload.getClaimAmount(), transactionPayload.getId()), HttpStatus.OK);
     }
 }
