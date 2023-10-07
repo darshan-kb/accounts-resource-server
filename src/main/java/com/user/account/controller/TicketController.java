@@ -17,7 +17,7 @@ public class TicketController {
     TicketService ticketService;
     @PostMapping("/ticket/add")
     public ResponseEntity<Double> addticket(@RequestBody AddTicketPayload addTicketPayload){
-        double balance = ticketService.addTicket(addTicketPayload.getEmail(), addTicketPayload.getAmount());
+        double balance = ticketService.addTicket(addTicketPayload.getEmail(), addTicketPayload.getAmount(), addTicketPayload.getTicketId());
         return new ResponseEntity<Double>(balance,HttpStatus.OK);
     }
 
