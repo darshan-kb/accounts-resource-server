@@ -12,4 +12,5 @@ import lombok.Setter;
 public class AddTicketPayload {
     private double amount;
     private String email;
+    private String ticketId;
 }
