@@ -40,7 +40,7 @@ public class SecurityConfig {
             CorsConfigurationSource source = s ->{
                 CorsConfiguration cc = new CorsConfiguration();
                 cc.setAllowCredentials(true);
-                cc.setAllowedOrigins(List.of("http://localhost:9090"));
+                cc.setAllowedOrigins(List.of("http://localhost:9090","http://localhost:8081"));
                 cc.setAllowedHeaders(List.of("*"));
                 cc.setAllowedMethods(List.of("*"));
                 return cc;
