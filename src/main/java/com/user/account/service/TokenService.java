@@ -10,7 +10,7 @@ import org.springframework.stereotype.Service;
 public class TokenService {
     @Autowired
     private OAuth2AuthorizedClientManager oAuth2AuthorizedClientManager;
-    String getToken(){
+    public String getToken(){
         OAuth2AuthorizeRequest request = OAuth2AuthorizeRequest
                 .withClientRegistrationId("3")
                 .principal("#Big2120")
