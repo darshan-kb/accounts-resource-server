@@ -12,7 +12,9 @@ import org.springframework.http.HttpEntity;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpMethod;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.client.RestTemplate;
 
 import java.util.List;
@@ -42,5 +44,17 @@ public class UserService {
 
     public double getbalance(String email){
         return userRepository.findByEmail(email).get().getBalance();
+    }
+
+    @Transactional
+    public double recharge(double amount, String email){
+        if(amount<0){
+            throw new IllegalStateException("Amount is not valid");
+        }
+        User user = userRepository.findByEmail(email).orElseThrow(() -> new UsernameNotFoundException("User not found"));
+        double balance = user.getBalance();
+        user.setBalance(balance+amount);
+        userRepository.save(user);
+        return balance+amount;
     }
 }
