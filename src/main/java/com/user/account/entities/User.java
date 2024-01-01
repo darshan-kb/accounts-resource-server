@@ -25,10 +25,11 @@ public class User {
     @OneToMany(mappedBy = "user", cascade = CascadeType.REMOVE)
     private List<AccountTransaction> accountTransaction;
 
-    public User(String username, String email, String role){
+    public User(String username, String email, String role, double balance){
         this.username=username;
         this.email=email;
         this.role=role;
+        this.balance=balance;
     }
 
     public User(UserDTO user){

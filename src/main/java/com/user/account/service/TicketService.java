@@ -10,6 +10,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.time.LocalDateTime;
+import java.util.Optional;
 
 @Service
 public class TicketService {
@@ -19,11 +20,14 @@ public class TicketService {
     private AccountTransactionRepository accountTransactionRepository;
 
     @Transactional
-    public double addTicket(String email, double amount, String remark){
+    public double addTicket(String email, String authorities, double amount, String remark){
         if(amount<0){
             throw new IllegalStateException("Amount is not valid");
         }
-        User user = userRepository.findByEmail(email).orElseThrow(() -> new UsernameNotFoundException("User not found"));
+        User user = userRepository.findByEmail(email).orElseGet(()->{
+            return userRepository.save(new User(email,email,authorities,0.0));
+        });
+
         double balance = user.getBalance();
         if(balance >= amount){
             user.setBalance(balance-amount);

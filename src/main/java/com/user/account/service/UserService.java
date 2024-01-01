@@ -28,22 +28,25 @@ public class UserService {
     @Autowired
     private GameServerRepository gameServerRepository;
     Logger logger = LoggerFactory.getLogger(UserService.class);
-    public String createUser(UserDTO user){
-        RestTemplate restTemplate = new RestTemplate();
-        HttpHeaders headers = new HttpHeaders();
-        headers.set("Authorization","Bearer "+tokenService.getToken());
-        HttpEntity<String> entity = new HttpEntity(user ,headers);
-        List<GameServer> gameServerList = gameServerRepository.findAll();
-        for(GameServer serverList : gameServerList){
-            ResponseEntity<UserDTO> response = restTemplate.exchange(serverList.getGameServerCreateAccountUrl(), HttpMethod.POST, entity, UserDTO.class);
-            logger.info("Account created on "+serverList.getGameServerName()+" "+response.getBody().toString());
-        }
+//    public String createUser(UserDTO user){
+//        RestTemplate restTemplate = new RestTemplate();
+//        HttpHeaders headers = new HttpHeaders();
+//        headers.set("Authorization","Bearer "+tokenService.getToken());
+//        HttpEntity<String> entity = new HttpEntity(user ,headers);
+//        List<GameServer> gameServerList = gameServerRepository.findAll();
+//        for(GameServer serverList : gameServerList){
+//            ResponseEntity<UserDTO> response = restTemplate.exchange(serverList.getGameServerCreateAccountUrl(), HttpMethod.POST, entity, UserDTO.class);
+//            logger.info("Account created on "+serverList.getGameServerName()+" "+response.getBody().toString());
+//        }
+//
+//        return userRepository.save(new User(user)).toString();
+//    }
 
-        return userRepository.save(new User(user)).toString();
-    }
+    public double getbalance(String email, String authorities){
 
-    public double getbalance(String email){
-        return userRepository.findByEmail(email).get().getBalance();
+        return userRepository.findByEmail(email).orElseGet(()->{
+            return userRepository.save(new User(email,email,authorities,0.0));
+        }).getBalance();
     }
 
     @Transactional
