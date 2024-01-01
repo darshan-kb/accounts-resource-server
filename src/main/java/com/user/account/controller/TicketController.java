@@ -11,19 +11,21 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RestController;
 
+import java.security.Principal;
+
 @RestController
 public class TicketController {
     @Autowired
     TicketService ticketService;
     @PostMapping("/ticket/add")
-    public ResponseEntity<Double> addticket(@RequestBody AddTicketPayload addTicketPayload){
-        double balance = ticketService.addTicket(addTicketPayload.getEmail(), addTicketPayload.getAmount(), addTicketPayload.getTicketId());
+    public ResponseEntity<Double> addticket(@RequestBody AddTicketPayload addTicketPayload, Principal p){
+        double balance = ticketService.addTicket(p.getName(), addTicketPayload.getAmount(), addTicketPayload.getTicketId());
         return new ResponseEntity<Double>(balance,HttpStatus.OK);
     }
 
     @PostMapping("/ticket/error")
-    public ResponseEntity<Double> errorticket(@RequestBody AddTicketPayload addTicketPayload){
-        double balance = ticketService.errorTicket(addTicketPayload.getEmail(), addTicketPayload.getAmount());
+    public ResponseEntity<Double> errorticket(@RequestBody AddTicketPayload addTicketPayload, Principal p){
+        double balance = ticketService.errorTicket(p.getName(), addTicketPayload.getAmount());
         return new ResponseEntity<Double>(balance,HttpStatus.OK);
     }
 }

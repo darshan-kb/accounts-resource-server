@@ -11,6 +11,5 @@ import lombok.Setter;
 @NoArgsConstructor
 public class AddTicketPayload {
     private double amount;
-    private String email;
     private String ticketId;
 }

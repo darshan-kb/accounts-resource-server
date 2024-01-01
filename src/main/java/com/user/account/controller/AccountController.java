@@ -18,9 +18,9 @@ public class AccountController {
     @Autowired
     UserService userService;
 
-    @GetMapping("account/balance/{email}")
-    public ResponseEntity<Double> getbalance(@PathVariable String email, Principal principal){
-        return ResponseEntity.ok(userService.getbalance(email));
+    @GetMapping("account/balance")
+    public ResponseEntity<Double> getbalance(Principal principal){
+        return ResponseEntity.ok(userService.getbalance(principal.getName()));
     }
 
     @PostMapping("account/recharge")
