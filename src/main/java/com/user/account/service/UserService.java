@@ -1,9 +1,14 @@
 package com.user.account.service;
 
+import com.netflix.discovery.converters.Auto;
 import com.user.account.dto.UserDTO;
+import com.user.account.entities.AmountVerification;
 import com.user.account.entities.GameServer;
+import com.user.account.entities.OtpConfirmation;
 import com.user.account.entities.User;
+import com.user.account.repository.AmountVerificationRepository;
 import com.user.account.repository.GameServerRepository;
+import com.user.account.repository.OtpConfirmationRepository;
 import com.user.account.repository.UserRepository;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -17,7 +22,9 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.client.RestTemplate;
 
+import java.time.LocalDateTime;
 import java.util.List;
+import java.util.stream.Collectors;
 
 @Service
 public class UserService {
@@ -27,6 +34,14 @@ public class UserService {
     private TokenService tokenService;
     @Autowired
     private GameServerRepository gameServerRepository;
+    @Autowired
+    private OtpConfirmationRepository otpConfirmationRepository;
+    @Autowired
+    private AmountVerificationRepository amountVerificationRepository;
+    @Autowired
+    private OtpService otpService;
+    @Autowired
+    private EmailSender emailSender;
     Logger logger = LoggerFactory.getLogger(UserService.class);
 //    public String createUser(UserDTO user){
 //        RestTemplate restTemplate = new RestTemplate();
@@ -50,14 +65,36 @@ public class UserService {
     }
 
     @Transactional
-    public double recharge(double amount, String email){
+    public double recharge(double amount, String userEmail, String email){
         if(amount<0){
             throw new IllegalStateException("Amount is not valid");
         }
-        User user = userRepository.findByEmail(email).orElseThrow(() -> new UsernameNotFoundException("User not found"));
+        User user = userRepository.findByEmail(userEmail).orElseThrow(() -> new UsernameNotFoundException("User not found"));
+//        OtpConfirmation otpConfirmation = new OtpConfirmation(email)
+        String otp = otpService.generateOtp();
+        emailSender.rechargeEmail(email,otp,amount);
+        LocalDateTime currentTime = LocalDateTime.now();
+        OtpConfirmation otpConfirmation = new OtpConfirmation(user,otp,currentTime,currentTime.plusMinutes(15));
+        AmountVerification amountVerification = new AmountVerification(amount, otpConfirmation);
+        amountVerificationRepository.save(amountVerification);
+        OtpConfirmation savedOtpConfirmation = otpConfirmationRepository.save(otpConfirmation);
+
+//        double balance = user.getBalance();
+//        user.setBalance(balance+amount);
+//        userRepository.save(user);
+        return savedOtpConfirmation.getOtpId();
+    }
+
+    @Transactional
+    public User confirmRecharge(Long otpId, String otp){
+        var otpObj = otpService.confirmOtp(otpId,otp);
+        User user = otpObj.getUser();
         double balance = user.getBalance();
-        user.setBalance(balance+amount);
-        userRepository.save(user);
-        return balance+amount;
+        user.setBalance(balance+otpObj.getAmountVerification().getAmount());
+        return userRepository.save(user);
+    }
+
+    public List<String> getAllUserEmail() {
+        return userRepository.findAll().stream().map(User::getEmail).collect(Collectors.toList());
     }
 }

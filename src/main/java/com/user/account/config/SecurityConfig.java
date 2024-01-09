@@ -18,6 +18,7 @@ import org.springframework.security.config.annotation.web.configuration.EnableWe
 //import org.springframework.security.oauth2.core.AuthorizationGrantType;
 //import org.springframework.security.oauth2.core.ClientAuthenticationMethod;
 //import org.springframework.security.oauth2.core.oidc.OidcScopes;
+import org.springframework.security.config.annotation.web.configurers.AbstractHttpConfigurer;
 import org.springframework.security.web.SecurityFilterChain;
 import org.springframework.security.web.csrf.CsrfFilter;
 import org.springframework.web.cors.CorsConfiguration;
@@ -33,20 +34,21 @@ public class SecurityConfig {
     @Bean
     public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception{
 
-        http.httpBasic(Customizer.withDefaults());
-        http.addFilterAfter(new CustomCSRFFilter(), CsrfFilter.class);
-
-        http.cors(c->{
-            CorsConfigurationSource source = s ->{
-                CorsConfiguration cc = new CorsConfiguration();
-                cc.setAllowCredentials(true);
-                cc.setAllowedOrigins(List.of("http://localhost:9090","http://localhost:8081"));
-                cc.setAllowedHeaders(List.of("*"));
-                cc.setAllowedMethods(List.of("*"));
-                return cc;
-            };
-            c.configurationSource(source);
-        });
+//        http.httpBasic(Customizer.withDefaults());
+//        http.addFilterAfter(new CustomCSRFFilter(), CsrfFilter.class);
+//
+//        http.cors(c->{
+//            CorsConfigurationSource source = s ->{
+//                CorsConfiguration cc = new CorsConfiguration();
+//                cc.setAllowCredentials(true);
+//                cc.setAllowedOrigins(List.of("http://localhost:9090","http://localhost:8081"));
+//                cc.setAllowedHeaders(List.of("*"));
+//                cc.setAllowedMethods(List.of("*"));
+//                return cc;
+//            };
+//            c.configurationSource(source);
+//        });
+        http.cors(AbstractHttpConfigurer::disable);
         http.oauth2ResourceServer(
                 r -> r.jwt((j)-> {
                             j.jwkSetUri(jwksUri);
@@ -56,6 +58,8 @@ public class SecurityConfig {
 
         );
         http.authorizeHttpRequests((a) -> {
+            a.requestMatchers("/account/users").hasRole("ADMIN");
+            a.requestMatchers("/account/recharge/**").hasRole("ADMIN");
             a.anyRequest().authenticated();
         });
         //http.oauth2Client();

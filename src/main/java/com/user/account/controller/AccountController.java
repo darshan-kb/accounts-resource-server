@@ -1,5 +1,7 @@
 package com.user.account.controller;
 
+import com.user.account.entities.User;
+import com.user.account.payload.OtpPayload;
 import com.user.account.payload.RechargePayload;
 import com.user.account.service.UserService;
 import org.slf4j.Logger;
@@ -14,6 +16,7 @@ import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.web.bind.annotation.*;
 
 import java.security.Principal;
+import java.util.List;
 
 @RestController
 public class AccountController {
@@ -30,7 +33,17 @@ public class AccountController {
     }
 
     @PostMapping("account/recharge")
-    public ResponseEntity<Double> recharge(@RequestBody RechargePayload rechargePayload){
-        return ResponseEntity.ok(userService.recharge(rechargePayload.getAmount(),rechargePayload.getEmail()));
+    public ResponseEntity<Double> recharge(@RequestBody RechargePayload rechargePayload, Authentication a){
+        return ResponseEntity.ok(userService.recharge(rechargePayload.getAmount(),rechargePayload.getEmail(),a.getName()));
+    }
+
+    @PostMapping("account/recharge/confirm")
+    public ResponseEntity<User> recharge(@RequestBody OtpPayload otp){
+        return ResponseEntity.ok(userService.confirmRecharge(otp.getOtpId(), otp.getOtp()));
+    }
+
+    @GetMapping("account/users")
+    public ResponseEntity<List<String>> getAllUserEmail(){
+        return ResponseEntity.ok(userService.getAllUserEmail());
     }
 }
