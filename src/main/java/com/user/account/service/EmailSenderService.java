@@ -37,11 +37,11 @@ public class EmailSenderService implements EmailSender{
         }
     }
 
-    public void rechargeEmail(String to, String otp, double amount){
-        send(to,buildEmail(otp,amount),"Recharge OTP");
+    public void rechargeEmail(String to, String user, String otp, double amount){
+        send(to,buildEmail(otp,user,amount),"Recharge OTP");
     }
 
-    public String buildEmail(String otp, double amount){
+    public String buildEmail(String otp,String user, double amount){
         return """
                 <div style="font-family: Helvetica,Arial,sans-serif;min-width:1000px;overflow:auto;line-height:2">
                   <div style="margin:50px auto;width:70%;padding:20px 0">
@@ -51,6 +51,7 @@ public class EmailSenderService implements EmailSender{
                     <p style="font-size:1.1em">Hi,</p>"""+
                     """
                     <p> Use the following OTP for recharge amount of"""+amount+"""
+                    to+"""+user+"""
                     . OTP is valid for 15 minutes</p>
                     <h2 style="background: #00466a;margin: 0 auto;width: max-content;padding: 0 10px;color: #fff;border-radius: 4px;">"""
                     +otp+"""

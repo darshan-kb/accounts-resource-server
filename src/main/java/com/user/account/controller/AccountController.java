@@ -1,7 +1,9 @@
 package com.user.account.controller;
 
+import com.user.account.dto.UserDTO;
 import com.user.account.entities.User;
 import com.user.account.payload.OtpPayload;
+import com.user.account.payload.RechargeConfirmationPayload;
 import com.user.account.payload.RechargePayload;
 import com.user.account.service.UserService;
 import org.slf4j.Logger;
@@ -33,12 +35,12 @@ public class AccountController {
     }
 
     @PostMapping("account/recharge")
-    public ResponseEntity<Double> recharge(@RequestBody RechargePayload rechargePayload, Authentication a){
+    public ResponseEntity<Long> recharge(@RequestBody RechargePayload rechargePayload, Authentication a){
         return ResponseEntity.ok(userService.recharge(rechargePayload.getAmount(),rechargePayload.getEmail(),a.getName()));
     }
 
     @PostMapping("account/recharge/confirm")
-    public ResponseEntity<User> recharge(@RequestBody OtpPayload otp){
+    public ResponseEntity<RechargeConfirmationPayload> recharge(@RequestBody OtpPayload otp){
         return ResponseEntity.ok(userService.confirmRecharge(otp.getOtpId(), otp.getOtp()));
     }
 

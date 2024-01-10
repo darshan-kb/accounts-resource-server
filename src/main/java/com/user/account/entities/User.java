@@ -23,7 +23,9 @@ public class User {
     private String role;
     private double balance;
     @OneToMany(mappedBy = "user", cascade = CascadeType.REMOVE)
-    private List<AccountTransaction> accountTransaction;
+    private List<AccountTransaction> accountTransactions;
+    @OneToMany(mappedBy = "user", cascade = CascadeType.REMOVE)
+    private List<OtpConfirmation> otpConfirmations;
 
     public User(String username, String email, String role, double balance){
         this.username=username;

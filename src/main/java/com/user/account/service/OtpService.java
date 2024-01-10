@@ -6,7 +6,9 @@ import com.user.account.entities.OtpConfirmation;
 import com.user.account.repository.OtpConfirmationRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
+import java.time.LocalDateTime;
 import java.util.Random;
 
 @Service
@@ -28,11 +30,12 @@ public class OtpService {
         return new String(otp);
     }
 
+    @Transactional
     public OtpConfirmation confirmOtp(Long otpId, String otp){
-        var otpConfirmation = otpConfirmationRepository.findById(otpId);
-        if(!otpConfirmation.isPresent()||otpConfirmation.get().getOtp()!=otp)
+        var otpConfirmation = otpConfirmationRepository.findById(otpId).orElseThrow(()-> new IllegalStateException("Invalid OTPId"));
+        System.out.println(otpConfirmation.getOtp());
+        if(!otpConfirmation.getOtp().equals(otp)||otpConfirmation.getExpireAt().isBefore(LocalDateTime.now())||otpConfirmation.getConfirmAt()!=null)
             throw new IllegalStateException("Invalid OTP");
-
-        return otpConfirmation.get();
+        return otpConfirmation;
     }
 }

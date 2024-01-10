@@ -6,6 +6,7 @@ import com.user.account.entities.AmountVerification;
 import com.user.account.entities.GameServer;
 import com.user.account.entities.OtpConfirmation;
 import com.user.account.entities.User;
+import com.user.account.payload.RechargeConfirmationPayload;
 import com.user.account.repository.AmountVerificationRepository;
 import com.user.account.repository.GameServerRepository;
 import com.user.account.repository.OtpConfirmationRepository;
@@ -65,17 +66,18 @@ public class UserService {
     }
 
     @Transactional
-    public double recharge(double amount, String userEmail, String email){
+    public Long recharge(double amount, String userEmail, String email){
         if(amount<0){
             throw new IllegalStateException("Amount is not valid");
         }
         User user = userRepository.findByEmail(userEmail).orElseThrow(() -> new UsernameNotFoundException("User not found"));
 //        OtpConfirmation otpConfirmation = new OtpConfirmation(email)
         String otp = otpService.generateOtp();
-        emailSender.rechargeEmail(email,otp,amount);
+        emailSender.rechargeEmail(email,userEmail,otp,amount);
         LocalDateTime currentTime = LocalDateTime.now();
         OtpConfirmation otpConfirmation = new OtpConfirmation(user,otp,currentTime,currentTime.plusMinutes(15));
         AmountVerification amountVerification = new AmountVerification(amount, otpConfirmation);
+        otpConfirmation.setAmountVerification(amountVerification);
         amountVerificationRepository.save(amountVerification);
         OtpConfirmation savedOtpConfirmation = otpConfirmationRepository.save(otpConfirmation);
 
@@ -86,12 +88,13 @@ public class UserService {
     }
 
     @Transactional
-    public User confirmRecharge(Long otpId, String otp){
+    public RechargeConfirmationPayload confirmRecharge(Long otpId, String otp){
         var otpObj = otpService.confirmOtp(otpId,otp);
         User user = otpObj.getUser();
         double balance = user.getBalance();
-        user.setBalance(balance+otpObj.getAmountVerification().getAmount());
-        return userRepository.save(user);
+        double rechargeAmount = otpObj.getAmountVerification().getAmount();
+        user.setBalance(balance+rechargeAmount);
+        return new RechargeConfirmationPayload(user.getEmail(),user.getBalance(),rechargeAmount);
     }
 
     public List<String> getAllUserEmail() {
