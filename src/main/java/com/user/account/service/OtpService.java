@@ -3,6 +3,10 @@ package com.user.account.service;
 import com.bastiaanjansen.otp.HOTPGenerator;
 import com.bastiaanjansen.otp.SecretGenerator;
 import com.user.account.entities.OtpConfirmation;
+import com.user.account.exception.ConsumedOtpException;
+import com.user.account.exception.InvalidOtpExecption;
+import com.user.account.exception.InvalidOtpIdException;
+import com.user.account.exception.OtpExpiredException;
 import com.user.account.repository.OtpConfirmationRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -32,10 +36,14 @@ public class OtpService {
 
     @Transactional
     public OtpConfirmation confirmOtp(Long otpId, String otp){
-        var otpConfirmation = otpConfirmationRepository.findById(otpId).orElseThrow(()-> new IllegalStateException("Invalid OTPId"));
+        var otpConfirmation = otpConfirmationRepository.findById(otpId).orElseThrow(InvalidOtpIdException::new);
         System.out.println(otpConfirmation.getOtp());
-        if(!otpConfirmation.getOtp().equals(otp)||otpConfirmation.getExpireAt().isBefore(LocalDateTime.now())||otpConfirmation.getConfirmAt()!=null)
-            throw new IllegalStateException("Invalid OTP");
+        if(!otpConfirmation.getOtp().equals(otp))
+            throw new InvalidOtpExecption();
+        else if(otpConfirmation.getExpireAt().isBefore(LocalDateTime.now()))
+            throw new OtpExpiredException();
+        else if(otpConfirmation.getConfirmAt()!=null)
+            throw new ConsumedOtpException();
         return otpConfirmation;
     }
 }

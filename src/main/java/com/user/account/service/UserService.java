@@ -6,6 +6,7 @@ import com.user.account.entities.AmountVerification;
 import com.user.account.entities.GameServer;
 import com.user.account.entities.OtpConfirmation;
 import com.user.account.entities.User;
+import com.user.account.exception.UserNotFoundException;
 import com.user.account.payload.RechargeConfirmationPayload;
 import com.user.account.repository.AmountVerificationRepository;
 import com.user.account.repository.GameServerRepository;
@@ -70,8 +71,8 @@ public class UserService {
         if(amount<0){
             throw new IllegalStateException("Amount is not valid");
         }
-        User user = userRepository.findByEmail(userEmail).orElseThrow(() -> new UsernameNotFoundException("User not found"));
-//        OtpConfirmation otpConfirmation = new OtpConfirmation(email)
+        User user = userRepository.findByEmail(userEmail).orElseThrow(UserNotFoundException::new);
+
         String otp = otpService.generateOtp();
         emailSender.rechargeEmail(email,userEmail,otp,amount);
         LocalDateTime currentTime = LocalDateTime.now();
@@ -81,9 +82,6 @@ public class UserService {
         amountVerificationRepository.save(amountVerification);
         OtpConfirmation savedOtpConfirmation = otpConfirmationRepository.save(otpConfirmation);
 
-//        double balance = user.getBalance();
-//        user.setBalance(balance+amount);
-//        userRepository.save(user);
         return savedOtpConfirmation.getOtpId();
     }
 
