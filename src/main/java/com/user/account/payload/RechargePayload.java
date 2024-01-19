@@ -9,7 +9,7 @@ import lombok.Setter;
 @Setter
 @AllArgsConstructor
 @NoArgsConstructor
-public class AddTicketPayload {
+public class RechargePayload {
     private double amount;
-    private String ticketId;
+    private String email;
 }

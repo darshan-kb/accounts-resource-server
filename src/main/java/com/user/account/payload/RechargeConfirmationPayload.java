@@ -7,9 +7,10 @@ import lombok.Setter;
 
 @Getter
 @Setter
-@AllArgsConstructor
 @NoArgsConstructor
-public class AddTicketPayload {
+@AllArgsConstructor
+public class RechargeConfirmationPayload {
+    private String user;
     private double amount;
-    private String ticketId;
+    private double recharge;
 }

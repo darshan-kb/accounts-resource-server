@@ -10,18 +10,18 @@ import org.springframework.web.bind.annotation.*;
 
 @RestController
 public class HelloController {
-    @Autowired
-    private UserService userService;
-    @GetMapping("/token")
-    public String hello(HttpServletRequest request){
-        CsrfToken csrfToken = (CsrfToken) request.getAttribute("_csrf");
-        System.out.println(csrfToken.getToken());
-        return "Hello from accounts server";
-    }
+//    @Autowired
+//    private UserService userService;
+//    @GetMapping("/token")
+//    public String hello(HttpServletRequest request){
+//        CsrfToken csrfToken = (CsrfToken) request.getAttribute("_csrf");
+//        System.out.println(csrfToken.getToken());
+//        return "Hello from accounts server";
+//    }
 
-    @PostMapping("/account")
-    public ResponseEntity<String> createUser(@RequestBody UserDTO user){
-        String u = userService.createUser(user);
-        return ResponseEntity.ok(u);
-    }
+//    @PostMapping("/account")
+//    public ResponseEntity<String> createUser(@RequestBody UserDTO user){
+//        String u = userService.createUser(user);
+//        return ResponseEntity.ok(u);
+//    }
 }

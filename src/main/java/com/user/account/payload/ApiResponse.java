@@ -9,7 +9,8 @@ import lombok.Setter;
 @Setter
 @AllArgsConstructor
 @NoArgsConstructor
-public class AddTicketPayload {
-    private double amount;
-    private String ticketId;
+public class ApiResponse {
+
+    private String message;
+    private boolean success;
 }

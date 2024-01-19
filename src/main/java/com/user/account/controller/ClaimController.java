@@ -9,12 +9,14 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RestController;
 
+import java.security.Principal;
+
 @RestController
 @AllArgsConstructor
 public class ClaimController {
     private ClaimService claimService;
     @PostMapping("/claims")
-    public ResponseEntity<Double> claim(@RequestBody TransactionPayload transactionPayload){
-        return new ResponseEntity<Double>(claimService.redeemClaim(transactionPayload.getEmail(), transactionPayload.getClaimAmount(), transactionPayload.getId()), HttpStatus.OK);
+    public ResponseEntity<Double> claim(@RequestBody TransactionPayload transactionPayload, Principal p){
+        return new ResponseEntity<Double>(claimService.redeemClaim(p.getName(), transactionPayload.getClaimAmount(), transactionPayload.getId()), HttpStatus.OK);
     }
 }
