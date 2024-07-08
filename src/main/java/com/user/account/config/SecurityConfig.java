@@ -48,6 +48,7 @@ public class SecurityConfig {
 //            };
 //            c.configurationSource(source);
 //        });
+        System.out.println("--------"+jwksUri);
         http.cors(AbstractHttpConfigurer::disable);
         http.oauth2ResourceServer(
                 r -> r.jwt((j)-> {

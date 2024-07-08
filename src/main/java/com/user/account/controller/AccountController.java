@@ -35,7 +35,7 @@ public class AccountController {
     }
 
     @PostMapping("account/recharge")
-    public ResponseEntity<Long> recharge(@RequestBody RechargePayload rechargePayload, Authentication a){
+    public ResponseEntity<Long> recharge(@RequestBody RechargePayload rechargePayload, Principal a){
         return ResponseEntity.ok(userService.recharge(rechargePayload.getAmount(),rechargePayload.getEmail(),a.getName()));
     }
 
