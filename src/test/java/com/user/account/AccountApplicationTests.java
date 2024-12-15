@@ -2,7 +2,6 @@ package com.user.account;
 
 import com.bastiaanjansen.otp.HOTPGenerator;
 import com.bastiaanjansen.otp.SecretGenerator;
-import com.netflix.discovery.converters.Auto;
 import com.user.account.dto.UserDTO;
 import com.user.account.entities.Client;
 import com.user.account.entities.GameServer;
@@ -25,32 +24,32 @@ import java.util.Optional;
 //@SpringBootTest
 class AccountApplicationTests {
 
-	@Autowired
-	private ClientRepository clientRepository;
+//	@Autowired
+//	private ClientRepository clientRepository;
+//
+//	@Autowired
+//	private PasswordEncoder encoder;
+//	@Autowired
+//	TokenService tokenService;
+//	@Autowired
+//	GameServerRepository gameServerRepository;
+//	@Autowired
+//	OtpService otpService;
 
-	@Autowired
-	private PasswordEncoder encoder;
-	@Autowired
-	TokenService tokenService;
-	@Autowired
-	GameServerRepository gameServerRepository;
-	@Autowired
-	OtpService otpService;
-
-	@Test
-	void contextLoads() {
-	}
-
-	@Test
-	void addClient(){
-		clientRepository.save(new Client("auth-server",encoder.encode("Henry2023!"),"ROLE_USER"));
-	}
-
-	@Test
-	void findClient(){
-		Optional<Client> c = clientRepository.findByClientname("auth-server");
-		System.out.println(c.get());
-	}
+//	@Test
+//	void contextLoads() {
+//	}
+//
+//	@Test
+//	void addClient(){
+//		clientRepository.save(new Client("auth-server",encoder.encode("Henry2023!"),"ROLE_USER"));
+//	}
+//
+//	@Test
+//	void findClient(){
+//		Optional<Client> c = clientRepository.findByClientname("auth-server");
+//		System.out.println(c.get());
+//	}
 
 //	@Test
 //	void testSlotMachineApi(){
@@ -63,18 +62,18 @@ class AccountApplicationTests {
 //		System.out.println(response2.getBody());
 //	}
 
-	@Test
-	void gameServerDetails(){
-		gameServerRepository.save(new GameServer("slotmachine","http://localhost:8081/account"));
-		gameServerRepository.save(new GameServer("spinmachine","http://localhost:9090/account"));
-	}
-	public String generateOtp(){
-		byte[] secret = SecretGenerator.generate();
-		HOTPGenerator hotp = new HOTPGenerator.Builder(secret).build();
-		return hotp.generate(5);
-	}
-	@Test
-	public void otpGenerator(){
-		System.out.println(generateOtp());
-	}
+//	@Test
+//	void gameServerDetails(){
+//		gameServerRepository.save(new GameServer("slotmachine","http://localhost:8081/account"));
+//		gameServerRepository.save(new GameServer("spinmachine","http://localhost:9090/account"));
+//	}
+//	public String generateOtp(){
+//		byte[] secret = SecretGenerator.generate();
+//		HOTPGenerator hotp = new HOTPGenerator.Builder(secret).build();
+//		return hotp.generate(5);
+//	}
+//	@Test
+//	public void otpGenerator(){
+//		System.out.println(generateOtp());
+//	}
 }

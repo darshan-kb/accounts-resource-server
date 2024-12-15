@@ -1,6 +1,5 @@
 package com.user.account.service;
 
-import com.netflix.discovery.converters.Auto;
 import com.user.account.dto.UserDTO;
 import com.user.account.entities.AmountVerification;
 import com.user.account.entities.GameServer;
